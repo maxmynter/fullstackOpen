@@ -24,7 +24,7 @@ const Statistics = (props) => {
         <tbody>
           {props.stats.map((stat) => {
             return (
-              <tr key={stat.name}>
+              <tr key={`${stat.text}_tr`}>
                 <StatisticLine stat={stat} />
               </tr>
             );
