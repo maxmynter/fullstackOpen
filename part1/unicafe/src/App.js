@@ -8,16 +8,31 @@ const Button = (props) => {
   return <button onClick={props.onClick}>{props.text}</button>;
 };
 
-const StatsDisplay = (props) => {
-  return (
-    <>
-      {props.stats.map((stat) => (
-        <p>
-          {stat.text}: {stat.stat}
-        </p>
-      ))}
-    </>
-  );
+const StatisticLine = ({ stat }) => (
+  <>
+    <td key={`${stat.text}_td`}>{stat.text}</td>
+    <td key={`${stat.stat}_td`}>{stat.stat}</td>
+  </>
+);
+
+const Statistics = (props) => {
+  if (props.stats.find((obj) => obj.text == "All").stat == 0) {
+    return <p key="NoFeedback">No Feedback given!</p>;
+  } else {
+    return (
+      <table>
+        <tbody>
+          {props.stats.map((stat) => {
+            return (
+              <tr key={stat.name}>
+                <StatisticLine stat={stat} />
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  }
 };
 
 const App = () => {
@@ -30,6 +45,14 @@ const App = () => {
     { text: "Good", stat: good },
     { text: "Neutral", stat: neutral },
     { text: "Bad", stat: bad },
+    { text: "Average", stat: (good - bad) / 2 },
+    {
+      text: "Positive Rate",
+      stat: `${
+        good + bad + neutral > 0 ? (100 * good) / (good + neutral + bad) : 0
+      } %`,
+    },
+    { text: "All", stat: good + bad + neutral },
   ];
 
   return (
@@ -39,7 +62,7 @@ const App = () => {
       <Button text="Neutral" onClick={() => setNeutral(neutral + 1)} />
       <Button text="Bad" onClick={() => setBad(bad + 1)} />
       <Header text="Statistics" />
-      <StatsDisplay stats={stats} />
+      <Statistics stats={stats} />
     </div>
   );
 };
