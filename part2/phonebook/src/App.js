@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import PersonForm from "./components/personform";
 import Input from "./components/input";
 import Filter from "./components/filter";
 import Heading from "./components/heading";
 import Persons from "./components/persons";
+import phoneNumberService from "./services/phoneNumbers";
 
 const App = () => {
   const noFilterAppliedString = "";
@@ -14,23 +14,38 @@ const App = () => {
   const [filterString, setFilterstring] = useState(noFilterAppliedString);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-    });
+    phoneNumberService.getAll().then((response) => setPersons(response));
   }, []);
 
   const onSubmit = (event) => {
     event.preventDefault();
     if (persons.map((person) => person.name).includes(newName)) {
-      alert(`${newName} already in phonebook. `);
-      setNewName("");
-      setNewNumber("");
+      let personInPhonebook = persons.find((person) => person.name === newName);
+      if (
+        window.confirm(
+          `${newName} already in phonebook. Do you want to replace their number ${personInPhonebook.number} with ${newNumber}?`
+        )
+      )
+        phoneNumberService
+          .update({ ...personInPhonebook, number: newNumber })
+          .then(() =>
+            phoneNumberService
+              .getAll()
+              .then((newPersons) => setPersons(newPersons))
+          );
     } else {
-      let newPersons = [...persons, { name: newName, number: newNumber }];
-      setPersons(newPersons);
-      setNewName("");
-      setNewNumber("");
+      const newNumberObject = { name: newName, number: newNumber }; // Here defined w/o id. Gets id from server
+      phoneNumberService
+        .create(newNumberObject)
+        .then(() =>
+          phoneNumberService
+            .getAll() // Fetch again from server to get all Persons (and with new persons id)
+            .then((newPersons) => setPersons(newPersons))
+        )
+        .catch((error) => console.log(error));
     }
+    setNewName("");
+    setNewNumber("");
   };
 
   const personFormInputs = [
@@ -60,6 +75,7 @@ const App = () => {
         persons={persons}
         filterString={filterString}
         noFilterAppliedString={noFilterAppliedString}
+        onPersonChange={setPersons}
       />
     </div>
   );

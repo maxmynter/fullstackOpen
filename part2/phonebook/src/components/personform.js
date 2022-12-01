@@ -1,10 +1,4 @@
-const SubmitButton = ({ text, onSubmit }) => (
-  <div>
-    <button onClick={onSubmit} type="submit">
-      {text}
-    </button>
-  </div>
-);
+import Button from "./button";
 
 const PersonForm = ({ inputs, onSubmit }) => {
   return (
@@ -12,7 +6,12 @@ const PersonForm = ({ inputs, onSubmit }) => {
       {inputs.map((input, idx) => (
         <div key={idx}>{input}</div>
       ))}
-      <SubmitButton text="add" onSubmit={onSubmit} />
+      <Button
+        key="PersonFormButton"
+        text="add"
+        onClick={onSubmit}
+        type="submit"
+      />
     </form>
   );
 };
