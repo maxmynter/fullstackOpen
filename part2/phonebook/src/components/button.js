@@ -1,5 +1,7 @@
+import "../index.css";
+
 const Button = ({ text, onClick, type }) => (
-  <button onClick={onClick} type={type}>
+  <button className="button" onClick={onClick} type={type}>
     {text}
   </button>
 );

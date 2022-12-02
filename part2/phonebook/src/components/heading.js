@@ -1,2 +1,3 @@
-const Heading = ({ text }) => <h2>{text}</h2>;
+import "../index.css";
+const Heading = ({ text }) => <h2 className="title">{text}</h2>;
 export default Heading;

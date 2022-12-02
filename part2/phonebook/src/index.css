@@ -1,0 +1,35 @@
+.title {
+  text-align: center;
+}
+.numberTile {
+  background-color: lightgrey;
+}
+.numberTile .button {
+  color: black;
+  background-color: red;
+  width: 10%;
+}
+.numberTile .text {
+  width: 45%;
+  display: inline-block;
+}
+
+.phoneNumberStausUpdate {
+  color: green;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.phoneNumberStausError {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
