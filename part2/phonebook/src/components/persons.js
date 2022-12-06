@@ -10,7 +10,10 @@ const onClickDelete = (
   if (window.confirm(`Do  you want to delete ${person.name}`))
     phoneNumberService.remove(person.id).then(() =>
       phoneNumberService.getAll().then((response) => {
-        statusChangeMessageCarrier(`Deleted "${person.name}" from phonebook.`);
+        statusChangeMessageCarrier(
+          `Deleted "${person.name}" from phonebook.`,
+          "delete"
+        );
         changeStateFunction(response);
       })
     );

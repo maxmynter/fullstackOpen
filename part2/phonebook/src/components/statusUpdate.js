@@ -2,7 +2,7 @@ import "../index.css";
 
 const DisplayStatusUpdate = ({ message, type }) => {
   if (message == null) return null;
-  if (type == "error")
+  if (type == "error" || type == "delete")
     return <div className="phoneNumberStausError">{message}</div>;
   if (type == "update")
     return <div className="phoneNumberStausUpdate">{message}</div>;
