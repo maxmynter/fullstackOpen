@@ -73,7 +73,10 @@ const App = () => {
               );
             })
         )
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          timedPhoneNumberStatusMessage(error.response.data.error, "error");
+          console.log("ERROR: ", error.response.data.error);
+        });
     }
     setNewName("");
     setNewNumber("");

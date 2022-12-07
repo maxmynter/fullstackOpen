@@ -9,6 +9,7 @@ const DisplayStatusUpdate = ({ message, type }) => {
   console.log(
     `Unkown StatusUpdateType "${type}" in function DisplayStatusUpdate.`
   );
+  return <div className="phoneNumberStausError">{message}</div>;
 };
 
 export default DisplayStatusUpdate;
