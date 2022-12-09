@@ -12,6 +12,7 @@
     "express": "^4.18.2",
     "http": "^0.0.1-security",
     "install": "^0.13.0",
+    "lodash": "^4.17.21",
     "mongoose": "^6.8.0",
     "node": "^19.2.0",
     "npm": "^9.2.0",
@@ -51,6 +52,6 @@
     "nodemon": "^2.0.20"
   },
   "jest": {
-   "testEnvironment": "node"
- }
+    "testEnvironment": "node"
+  }
 }
