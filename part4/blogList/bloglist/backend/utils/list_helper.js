@@ -1,4 +1,3 @@
-const { log } = require("console");
 var _ = require("lodash");
 
 const dummy = (blogs) => {

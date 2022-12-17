@@ -13,6 +13,7 @@
     "http": "^0.0.1-security",
     "install": "^0.13.0",
     "lodash": "^4.17.21",
+    "mongo": "^0.1.0",
     "mongoose": "^6.8.0",
     "node": "^19.2.0",
     "npm": "^9.2.0",
@@ -23,11 +24,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dev": "nodemon backend/mongo.js",
+    "start-frontend": "NODE_ENV=development react-scripts start",
+    "dev": " NODE_ENV=development nodemon backend/index.js",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "test": "jest --verbose"
+    "test": "jest --verbose --runInBand --forceExit"
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +51,9 @@
   },
   "devDependencies": {
     "jest": "^27.5.1",
-    "nodemon": "^2.0.20"
+    "mongod": "^2.0.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "testEnvironment": "node"
