@@ -42,6 +42,34 @@ test("Can POST new blog entry", async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 });
 
+test("If property 'Likes' is missing from new entry, default it to zero", async () => {
+  const newBlogEntry = {
+    title: "Blog Post without likes",
+    author: "Unliked",
+    url: "www.nolikes.de",
+  };
+  await api.post("/api/blogs").send(newBlogEntry).expect(201);
+
+  const newBlogEntryFromBackend = await Blogs.find({
+    title: "Blog Post without likes",
+  });
+  console.log(newBlogEntryFromBackend[0]);
+  expect(newBlogEntryFromBackend[0].likes).toBe(0);
+});
+
+test("Receive error 400 for POST of new blog entry without title", async () => {
+  const blogEntryWithoutTitle = { author: "No Title", url: "www.nolikes.de" };
+  await api.post("/api/blogs").send(blogEntryWithoutTitle).expect(400);
+});
+
+test("Receive error 400 for POST of new blog entry without url", async () => {
+  const blogEntryWithoutURL = {
+    title: "Cannot post Blog without URL",
+    author: "No Title",
+  };
+  await api.post("/api/blogs").send(blogEntryWithoutURL).expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

@@ -1,4 +1,5 @@
 const express = require("express");
+require("express-async-errors");
 const middleware = require("./utils/middleware");
 const app = express();
 const cors = require("cors");
