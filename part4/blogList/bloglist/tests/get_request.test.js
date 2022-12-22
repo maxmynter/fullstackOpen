@@ -24,6 +24,24 @@ test("Correct number of blogs in database", async () => {
   expect(allBlogs).toHaveLength((await helper.blogsInDb()).length);
 });
 
+test("Identifier property 'id' is defined.", async () => {
+  const blogEntries = await Blogs.find({});
+  blogEntries.forEach((entry) => expect(entry.id).toBeDefined());
+});
+
+test("Can POST new blog entry", async () => {
+  const newBlogEntry = {
+    title: "New Blog Post",
+    author: "Me",
+    url: "www.test.de",
+  };
+
+  await api.post("/api/blogs").send(newBlogEntry).expect(201);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
