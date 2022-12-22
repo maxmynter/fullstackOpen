@@ -53,7 +53,6 @@ test("If property 'Likes' is missing from new entry, default it to zero", async 
   const newBlogEntryFromBackend = await Blogs.find({
     title: "Blog Post without likes",
   });
-  console.log(newBlogEntryFromBackend[0]);
   expect(newBlogEntryFromBackend[0].likes).toBe(0);
 });
 
@@ -68,6 +67,27 @@ test("Receive error 400 for POST of new blog entry without url", async () => {
     author: "No Title",
   };
   await api.post("/api/blogs").send(blogEntryWithoutURL).expect(400);
+});
+
+test("Can DELETE Blog entry", async () => {
+  const toDeleteBlog = await helper.blogsInDb();
+  await api.delete(`/api/blogs/${toDeleteBlog[0].id}`).expect(204);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1);
+});
+
+test("Can update Blog entry", async () => {
+  const blogsInDB = await helper.blogsInDb();
+  const toUpdateBlog = blogsInDB[0];
+  const updatedLikes = {
+    likes: toUpdateBlog.likes + 5,
+  };
+  await api.put(`/api/blogs/${toUpdateBlog.id}`).send(updatedLikes).expect(204);
+  const blogsAtEnd = await helper.blogsInDb();
+  const updatedBlog = blogsAtEnd.find((blog) => blog.id === toUpdateBlog.id);
+  console.log(updatedBlog);
+  expect(updatedBlog.likes).toBe(toUpdateBlog.likes + 5);
 });
 
 afterAll(() => {
