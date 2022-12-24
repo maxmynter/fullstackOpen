@@ -1,7 +1,7 @@
 const express = require("express");
 require("express-async-errors");
-const middleware = require("./utils/middleware");
 const app = express();
+const middleware = require("./utils/middleware");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
@@ -13,7 +13,7 @@ logger.info("connecting to Mongodb. URL : ", config.MONGODB_URI);
 
 const connectDB = async () => {
   try {
-    mongoose.connect(config.MONGODB_URI);
+    await mongoose.connect(config.MONGODB_URI);
     logger.info("connected to MongoDB");
   } catch (error) {
     logger.error("error connection to MongoDB:", error.message);
@@ -21,7 +21,6 @@ const connectDB = async () => {
 };
 
 connectDB();
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
