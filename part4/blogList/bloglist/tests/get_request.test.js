@@ -86,7 +86,6 @@ test("Can update Blog entry", async () => {
   await api.put(`/api/blogs/${toUpdateBlog.id}`).send(updatedLikes).expect(204);
   const blogsAtEnd = await helper.blogsInDb();
   const updatedBlog = blogsAtEnd.find((blog) => blog.id === toUpdateBlog.id);
-  console.log(updatedBlog);
   expect(updatedBlog.likes).toBe(toUpdateBlog.likes + 5);
 });
 

@@ -1,6 +1,6 @@
 POST http://localhost:3002/api/blogs
-
 Content-Type: application/json
+
 {
     "title": "Test Blog",
     "author": "Jack & Jones",
@@ -12,3 +12,16 @@ GET http://localhost:3002/api/blogs
 
 ###
 DELETE http://localhost:3002/api/blogs/63a4a3531d906dab19a31ae0
+
+###
+POST http://localhost:3002/api/users
+Content-Type: application/json
+
+{
+    "name": "Mark",
+    "password": "123",
+    "username": "M123"
+}
+
+###
+GET http://localhost:3002/api/users
