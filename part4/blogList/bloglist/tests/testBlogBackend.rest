@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik0xMjMiLCJpZCI6IjYzYTcyOTFlMDAxMzMxZDJiYjgyNjA1NSIsImlhdCI6MTY3MTkwNDMzNX0.p7Jqq_rQRa3ce69W3nUqldJyv9YdIwRAwm8-hahIi5A
 
 {
-    "title": "Test Blog",
+    "title": "Test Blog 2",
     "author": "Jack & Jones",
     "url": "www.ich.de",
     "likes": 0

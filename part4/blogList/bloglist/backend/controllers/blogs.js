@@ -17,18 +17,21 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
-  const token = getTokenFrom(request);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
+  try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
-  if (!decodedToken.id) {
-    return response
-      .status(401)
-      .json({ error: "authentication missing or invalid" });
+    if (!decodedToken.id) {
+      return response
+        .status(401)
+        .json({ error: "authentication missing or invalid" });
+    }
+    const loggedInUser = await User.findById(decodedToken.id);
+    const blog = new Blog({ ...request.body, creator: loggedInUser });
+    const result = await blog.save();
+    return response.status(201).json(result);
+  } catch (error) {
+    return response.status(401).json({ error: "Authentication Error" });
   }
-  const loggedInUser = await User.findById(decodedToken.id);
-  const blog = new Blog({ ...request.body, creator: loggedInUser });
-  const result = await blog.save();
-  return response.status(201).json(result);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
