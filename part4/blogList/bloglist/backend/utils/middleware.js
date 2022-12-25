@@ -38,8 +38,12 @@ const tokenExtractor = (request, response, next) => {
 
 const userExtractor = async (request, response, next) => {
   try {
-    const loggedInUser = await User.findById(request.token.id);
-    request.user = loggedInUser;
+    if (request.token.id) {
+      const loggedInUser = await User.findById(request.token.id);
+      request.user = loggedInUser;
+    } else {
+      console.log("No token provided");
+    }
   } catch (error) {
     request.user = null;
     console.log("Error: ", error);
