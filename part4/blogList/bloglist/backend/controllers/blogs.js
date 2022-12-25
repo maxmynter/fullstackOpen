@@ -3,14 +3,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const Blog = require("../models/blogs");
 
-const getTokenFrom = (request) => {
-  const authorization = request.get("authorization");
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("creator");
   return response.json(blogs);
@@ -35,8 +27,28 @@ blogsRouter.post("/", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id);
-  response.status(204).end();
+  try {
+    const decodedToken = await jwt.verify(request.token, process.env.SECRET);
+    if (!decodedToken.id) {
+      return response
+        .status(401)
+        .json({ error: "authentication missing or invalid" });
+    }
+
+    const blogToDelete = await Blog.findById(request.params.id);
+
+    if (decodedToken.id.toString() === blogToDelete.creator.toString()) {
+      await Blog.findByIdAndRemove(request.params.id);
+      return response.status(204).end();
+    }
+    return response
+      .status(401)
+      .json({ error: "Only the creator of an entry can delete entries" });
+  } catch (error) {
+    return response
+      .status(401)
+      .json({ error: "Authentication Error: " + error });
+  }
 });
 
 blogsRouter.put("/:id", async (request, response) => {
