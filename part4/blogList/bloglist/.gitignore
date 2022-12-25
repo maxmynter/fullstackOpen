@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-/tests/testBlogBackendRest
+/tests/testBlogBackend.rest 
 
 # production
 /build
