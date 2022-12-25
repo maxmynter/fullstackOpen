@@ -42,7 +42,7 @@ const userExtractor = async (request, response, next) => {
     request.user = loggedInUser;
   } catch (error) {
     request.user = null;
-    console.log("Not logged in.");
+    console.log("Error: ", error);
   }
   next();
 };
