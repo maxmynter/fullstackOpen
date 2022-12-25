@@ -30,22 +30,20 @@ const tokenExtractor = (request, response, next) => {
   let token = null;
   const authorization = request.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    token = authorization.substring(7);
+    token = jwt.verify(authorization.substring(7), process.env.SECRET);
   }
-
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!decodedToken) {
-    return response
-      .status(401)
-      .json({ error: "authentication missing or invalid" });
-  }
-  request.token = decodedToken;
+  request.token = token;
   next();
 };
 
 const userExtractor = async (request, response, next) => {
-  const loggedInUser = await User.findById(request.token.id);
-  request.user = loggedInUser;
+  try {
+    const loggedInUser = await User.findById(request.token.id);
+    request.user = loggedInUser;
+  } catch (error) {
+    request.user = null;
+    console.log("Not logged in.");
+  }
   next();
 };
 

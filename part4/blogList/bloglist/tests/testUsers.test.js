@@ -5,17 +5,16 @@ const app = require("../backend/app");
 const api = supertest(app);
 
 const User = require("../backend/models/users");
-const helper = require("./test_helpers");
 const userTestHelper = require("./testUser_helpers");
 beforeAll(async () => {
   //Wait until connection of app is ready.
   await new Promise((resolve) => setTimeout(resolve, 1000));
 });
+beforeEach(async () => {
+  await User.deleteMany({});
+  await User.insertMany(userTestHelper.initialUsers);
+}, 100000);
 describe("User Creation", () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
-    await User.insertMany(userTestHelper.initialUsers);
-  }, 100000);
   test("Cannot create user with existing username", async () => {
     const duplicateUser = {
       name: "Charles Bukowski",

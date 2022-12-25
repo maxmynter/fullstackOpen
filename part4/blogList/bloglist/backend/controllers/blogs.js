@@ -10,11 +10,18 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
   try {
     const loggedInUser = request.user;
-    const blog = new Blog({ ...request.body, creator: loggedInUser });
-    const result = await blog.save();
-    return response.status(201).json(result);
+    if (loggedInUser) {
+      const blog = new Blog({ ...request.body, creator: loggedInUser });
+      const result = await blog.save();
+      return response.status(201).json(result);
+    } else {
+      return response.status(401).json({ error: "Authentication Error" });
+    }
   } catch (error) {
-    return response.status(401).json({ error: "Authentication Error" });
+    if (error._message === "Blog validation failed") {
+      return response.status(400).json({ error: "Blog validation failed" });
+    }
+    return response.status(400).json({ error });
   }
 });
 

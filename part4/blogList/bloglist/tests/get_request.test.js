@@ -7,17 +7,26 @@ const api = supertest(app);
 const Blogs = require("../backend/models/blogs");
 const helper = require("./test_helpers");
 
+let token;
+
 beforeAll(async () => {
   //Wait until connection of app is ready.
   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  api
+    .post("/api/login")
+    .send({ username: "M123", password: "123" })
+    .then((response) => {
+      token = response.body.token;
+    });
 });
 
-describe("Misc. Requests", () => {
-  beforeEach(async () => {
-    await Blogs.deleteMany({});
-    await Blogs.insertMany(helper.initialBlogs);
-  }, 100000);
+beforeEach(async () => {
+  await Blogs.deleteMany({});
+  await Blogs.insertMany(helper.initialBlogs);
+}, 100000);
 
+describe("Misc. Requests", () => {
   test("blogs are returned as JSON", async () => {
     await api
       .get("/api/blogs")
@@ -42,7 +51,11 @@ describe("Misc. Requests", () => {
       url: "www.test.de",
     };
 
-    await api.post("/api/blogs").send(newBlogEntry).expect(201);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `bearer ${token}`)
+      .send(newBlogEntry)
+      .expect(201);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
@@ -54,7 +67,11 @@ describe("Misc. Requests", () => {
       author: "Unliked",
       url: "www.nolikes.de",
     };
-    await api.post("/api/blogs").send(newBlogEntry).expect(201);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `bearer ${token}`)
+      .send(newBlogEntry)
+      .expect(201);
 
     const newBlogEntryFromBackend = await Blogs.find({
       title: "Blog Post without likes",
@@ -64,7 +81,11 @@ describe("Misc. Requests", () => {
 
   test("Receive error 400 for POST of new blog entry without title", async () => {
     const blogEntryWithoutTitle = { author: "No Title", url: "www.nolikes.de" };
-    await api.post("/api/blogs").send(blogEntryWithoutTitle).expect(400);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `bearer ${token}`)
+      .send(blogEntryWithoutTitle)
+      .expect(400);
   });
 
   test("Receive error 400 for POST of new blog entry without url", async () => {
@@ -72,15 +93,39 @@ describe("Misc. Requests", () => {
       title: "Cannot post Blog without URL",
       author: "No Title",
     };
-    await api.post("/api/blogs").send(blogEntryWithoutURL).expect(400);
+    await api
+      .post("/api/blogs")
+      .send(blogEntryWithoutURL)
+      .set("Authorization", `bearer ${token}`)
+      .expect(400);
   });
 
   test("Can DELETE Blog entry", async () => {
-    const toDeleteBlog = await helper.blogsInDb();
-    await api.delete(`/api/blogs/${toDeleteBlog[0].id}`).expect(204);
+    const toDeleteEntry = {
+      title: "Title",
+      author: "author",
+      url: "www.nolikes.de",
+    };
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `bearer ${token}`)
+      .send(toDeleteEntry)
+      .expect(201);
+
+    const blogsAfterInsert = await helper.blogsInDb();
+
+    const toDeleteEntryID = (
+      await Blogs.findOne({
+        title: "Title",
+      })
+    )._id.toString();
+    await api
+      .delete(`/api/blogs/${toDeleteEntryID}`)
+      .set("Authorization", `bearer ${token}`)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1);
+    expect(blogsAtEnd.length).toBe(blogsAfterInsert.length - 1);
   });
 
   test("Can update Blog entry", async () => {
@@ -97,7 +142,17 @@ describe("Misc. Requests", () => {
     const updatedBlog = blogsAtEnd.find((blog) => blog.id === toUpdateBlog.id);
     expect(updatedBlog.likes).toBe(toUpdateBlog.likes + 5);
   });
+
+  test("POST of a new blog entry fails with status 401 if no token authentication is provided", async () => {
+    const newBlogEntry = {
+      title: "New Sample Post",
+      author: "Matthew",
+      url: "www.me.de",
+    };
+    await api.post("/api/blogs").send(newBlogEntry).expect(401);
+  });
 });
-afterAll(() => {
+afterAll(async () => {
+  // delete user test blogs
   mongoose.connection.close();
 });

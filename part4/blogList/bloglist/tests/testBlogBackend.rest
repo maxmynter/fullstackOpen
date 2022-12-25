@@ -1,10 +1,19 @@
 POST http://localhost:3002/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik0xMjMiLCJpZCI6IjYzYTcyOTFlMDAxMzMxZDJiYjgyNjA1NSIsImlhdCI6MTY3MTkwNDMzNX0.p7Jqq_rQRa3ce69W3nUqldJyv9YdIwRAwm8-hahIi5A
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik0xMjMiLCJpZCI6IjYzYTcyOTFlMDAxMzMxZDJiYjgyNjA1NSIsImlhdCI6MTY3MTk2MTg3OH0.dbEHYkMfee2ql2vSaJ7EkF04MU_sE3A0hbr5W7c-Wnc
 
 {
-    "title": "Testing",
+    "title": "Testing This",
     "author": "Jack & Jones",
+    "url": "www.ich.de",
+    "likes": 0
+}
+###
+POST http://localhost:3002/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik0xMjMiLCJpZCI6IjYzYTgzMzVlYjI0ODY5ZTU4Y2NlZTk1YiIsImlhdCI6MTY3MTk2ODc0N30.bOjUBW6Acpr6MDjoGv8TpVkoZB_8g_dOEje3aL3nQuI
+
+{
     "url": "www.ich.de",
     "likes": 0
 }
@@ -36,6 +45,6 @@ Content-Type: application/json
     "username": "M123"
 }
 ###
-DELETE http://localhost:3002/api/blogs/63a81cfaff78513a5496e6b7
+DELETE http://localhost:3002/api/blogs/63a81d3dff78513a5496e6bf
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik0xMjMiLCJpZCI6IjYzYTcyOTFlMDAxMzMxZDJiYjgyNjA1NSIsImlhdCI6MTY3MTk2MTg3OH0.dbEHYkMfee2ql2vSaJ7EkF04MU_sE3A0hbr5W7c-Wnc
 
