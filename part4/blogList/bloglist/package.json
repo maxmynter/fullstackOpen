@@ -32,7 +32,8 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "test": "jest --verbose --runInBand --forceExit"
+    "test": "jest --verbose --runInBand --forceExit",
+    "start:test": "REACT_APP_PORT_BACKEND=3003 NODE_ENV=test node backend/index.js"
   },
   "eslintConfig": {
     "extends": [

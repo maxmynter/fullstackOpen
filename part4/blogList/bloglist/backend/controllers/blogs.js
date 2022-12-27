@@ -1,4 +1,5 @@
 const blogsRouter = require("express").Router();
+const jwt = require("jsonwebtoken");
 const Blog = require("../models/blogs");
 const middleware = require("../utils/middleware");
 
@@ -48,11 +49,9 @@ blogsRouter.delete(
 );
 
 blogsRouter.put("/:id", async (request, response) => {
-  console.log("request.body", request.body);
   const blog = {
     likes: request.body.likes,
   };
-  console.log("request.params.id", request.params.id);
   await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
   return response.status(204).end();
 });
